@@ -6,7 +6,7 @@
  *  and is available at http://www.eclipse.org/legal/epl-v10.html
  *
  */
-package evora;
+package org.evora.core;
 
 public class NSCBuilder {
     private String[] nsc = {"s5", "s4", "s3"};

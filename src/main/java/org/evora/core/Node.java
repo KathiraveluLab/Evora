@@ -7,7 +7,7 @@
  *
  */
 
-package evora;
+package org.evora.core;
 
 public class Node {
     private String id;

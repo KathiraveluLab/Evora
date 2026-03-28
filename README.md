@@ -1,6 +1,6 @@
-# Mayan Research Framework
+# Évora Research Framework
 
-Mayan is a research framework for service composition and orchestration in SDN-enabled environments, as described in the ICWS 2016 paper.
+Évora is a research framework for service composition and orchestration in SDN-enabled environments.
 
 ## Messaging4Transport Integration
 
@@ -8,7 +8,7 @@ The framework is configured to use the [Messaging4Transport](https://github.com/
 
 ### Local Installation of Messaging4Transport
 
-Since Messaging4Transport is a separate project, you must install it to your local Maven repository (`~/.m2/repository`) before building Mayan.
+Since Messaging4Transport is a separate project, you must install it to your local Maven repository (`~/.m2/repository`) before building Évora.
 
 #### Automated Installation
 ```bash
@@ -32,5 +32,6 @@ chmod +x install_m4t.sh
 > `sudo apt install maven`
 
 ## Project Structure
-- `src/main/java/evora`: Initial Mayan node and composition logic.
+- `src/main/java/org/evora/core`: Building block and composition logic.
+- `src/main/java/org/evora/registry`: Service Registry implementation.
 - `pom.xml`: Configured with ODL repositories and `messaging4transport-impl` dependency.

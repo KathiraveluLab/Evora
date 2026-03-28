@@ -7,7 +7,7 @@
  *
  */
 
-package evora;
+package org.evora.core;
 
 import java.util.ArrayList;
 import java.util.List;
