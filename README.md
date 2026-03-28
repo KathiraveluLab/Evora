@@ -32,9 +32,26 @@ chmod +x install_m4t.sh
 > `sudo apt install maven`
 
 ## Project Structure
-- `src/main/java/org/evora/core`: Building block and composition logic.
+- `src/main/java/org/evora/core`: Building block, composition, and Orchestration logic.
 - `src/main/java/org/evora/registry`: Service Registry implementation.
+- `evora_topology.py`: 12-node Mininet edge topology script.
 - `pom.xml`: Configured with ODL repositories and `messaging4transport-impl` dependency.
+
+## Empirical Evaluation
+
+To reproduce the performance results (Speedup and Complexity) from the ETT 2018 paper:
+1.  **Build the project**: `mvn clean compile`
+2.  **Run the Benchmarker**:
+    ```bash
+    java -cp target/classes org.evora.core.Benchmarker
+    ```
+
+## SDN Deployment (Mininet)
+
+To spin up the 12-node edge topology in a Mininet environment managed by OpenDaylight:
+```bash
+sudo mn --custom evora_topology.py --topo evora --controller remote,ip=<odl_ip>
+```
 
 ## Citing Évora
 
