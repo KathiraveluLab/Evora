@@ -1,4 +1,4 @@
-# Évora Research Framework
+# Évora 
 
 Évora is a research framework for service composition and orchestration in SDN-enabled environments.
 
