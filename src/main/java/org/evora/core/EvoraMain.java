@@ -76,6 +76,19 @@ public class EvoraMain {
             // Test Dynamic Flow Actuation
             DynamicActuator actuator = new DynamicActuator();
             actuator.actuate(solHeuristic);
+
+            // Test SLM: VNF Migration Scenario (Section V.C)
+            System.out.println("\n--- Initiating Dynamic Migration Test (SLM) ---");
+            ServiceLifecycleManager slm = new ServiceLifecycleManager(orchestrator, actuator);
+            
+            // Simulate congestion on the current optimal node for 's5'
+            String s5NodeId = solHeuristic.getMappings().get("s5");
+            Node s5Node = tempNodes.get(s5NodeId);
+            System.out.println("Simulating congestion on node " + s5NodeId + " (Latency 2ms -> 50ms)");
+            s5Node.setLatency(50.0); 
+
+            // Trigger SLM re-evaluation
+            slm.onResourceChange("s5", s5NodeId, nsc, latencyPolicy);
             
         } catch (Exception e) {
             System.err.println("Error initializing Évora Ecosystem: " + e.getMessage());
