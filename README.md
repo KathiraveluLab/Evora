@@ -35,3 +35,9 @@ chmod +x install_m4t.sh
 - `src/main/java/org/evora/core`: Building block and composition logic.
 - `src/main/java/org/evora/registry`: Service Registry implementation.
 - `pom.xml`: Configured with ODL repositories and `messaging4transport-impl` dependency.
+
+# Citing Évora
+
+If you use Évora in your research, please cite the below paper:
+
+* Kathiravelu, P., Van Roy, P. and Veiga, L., 2018. **Composing network service chains at the edge: A Resilient and adaptive software‐defined approach.** Transactions on Emerging Telecommunications Technologies, 29(11), p.e3489.
