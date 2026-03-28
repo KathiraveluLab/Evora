@@ -67,6 +67,69 @@ public class Orchestrator {
         return solution;
     }
 
+    private PlacementSolution bestSolution;
+    private double bestPenalty = Double.MAX_VALUE;
+
+    public PlacementSolution solveHeuristic(String[] serviceChain, UserPolicy policy) {
+        System.out.println("\n--- Initiating Heuristic Placement Orchestration (Recursive) ---");
+        bestPenalty = Double.MAX_VALUE;
+        bestSolution = null;
+        
+        backtrack(serviceChain, policy, 0, 0, new PlacementSolution(), null);
+        
+        if (bestSolution == null) {
+            System.err.println("CRITICAL: No valid heuristic solution found.");
+            return new PlacementSolution();
+        }
+        
+        System.out.println("Heuristic Search Complete. Best Total Penalty: " + String.format("%.4f", bestPenalty));
+        return bestSolution;
+    }
+
+    private void backtrack(String[] serviceChain, UserPolicy policy, int index, double currentPenalty, 
+                          PlacementSolution currentSolution, String lastNodeId) {
+        
+        // Pruning: if current path is already worse than the best found, stop.
+        if (currentPenalty >= bestPenalty) return;
+
+        // Base case: all services placed
+        if (index == serviceChain.length) {
+            bestPenalty = currentPenalty;
+            // Create a deep copy of the current solution
+            bestSolution = new PlacementSolution();
+            for (Map.Entry<String, String> entry : currentSolution.getMappings().entrySet()) {
+                bestSolution.addMapping(entry.getKey(), entry.getValue());
+            }
+            bestSolution.setTotalPenalty(bestPenalty);
+            return;
+        }
+
+        String service = serviceChain[index];
+        for (Node node : nodeMap.values()) {
+            if (containsService(node, service)) {
+                // Calculate Node Penalty
+                double nodePenalty = calculatePenalty(node, policy);
+                
+                // Calculate Link Latency Penalty (if not the first service)
+                double linkPenalty = 0;
+                if (lastNodeId != null) {
+                    Node prevNode = nodeMap.get(lastNodeId);
+                    // Link penalty = policy_beta * link_latency
+                    linkPenalty = policy.getBeta() * prevNode.getLatencyTo(node.getId());
+                }
+
+                double nextPenalty = currentPenalty + nodePenalty + linkPenalty;
+                
+                // Recursive step
+                currentSolution.addMapping(service, node.getId());
+                backtrack(serviceChain, policy, index + 1, nextPenalty, currentSolution, node.getId());
+                
+                // Backtrack (cleanup for next branch)
+                currentSolution.getMappings().remove(service);
+            }
+        }
+    }
+
     /**
      * Calculates the MILP penalty function: alpha*C + beta*L + gamma*T^-1
      */

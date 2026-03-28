@@ -32,6 +32,13 @@ public class EvoraMain {
         tempNodes.put("n14", new Node("n14", new String[]{"n15"}, new String[] {"s2"}, 7.0, 7.0, 70.0));
         tempNodes.put("n17", new Node("n17", new String[]{"n15"}, new String[] {"s2"}, 10.0, 5.0, 100.0));
         tempNodes.put("n16", new Node("n16", new String[]{"n15"}, new String[] {"s3", "s4"}, 13.0, 3.5, 140.0));
+
+        // Adding link latencies (ms) as per ETT 2018 topology
+        tempNodes.get("n10").addNeighborLatency("n12", 2.0);
+        tempNodes.get("n12").addNeighborLatency("n16", 5.0);
+        tempNodes.get("n16").addNeighborLatency("n15", 3.0);
+        tempNodes.get("n15").addNeighborLatency("n6", 12.0);
+        tempNodes.get("n6").addNeighborLatency("n7", 4.0);
     }
 
     public static void main(String[] args) {
@@ -60,11 +67,15 @@ public class EvoraMain {
             // Policy 2: Latency Optimized (beta=10.0, others=1.0)
             UserPolicy latencyPolicy = new UserPolicy(1.0, 10.0, 1.0);
             PlacementSolution sol2 = orchestrator.solveGreedy(nsc, latencyPolicy);
-            System.out.println("Latency-Optimized Solution: " + sol2);
+            System.out.println("Greedy Latency-Optimized Solution: " + sol2);
+
+            // Test solveHeuristic (Global Optimum)
+            PlacementSolution solHeuristic = orchestrator.solveHeuristic(nsc, latencyPolicy);
+            System.out.println("Heuristic Latency-Optimized Solution: " + solHeuristic);
 
             // Test Dynamic Flow Actuation
             DynamicActuator actuator = new DynamicActuator();
-            actuator.actuate(sol2);
+            actuator.actuate(solHeuristic);
             
         } catch (Exception e) {
             System.err.println("Error initializing Évora Ecosystem: " + e.getMessage());

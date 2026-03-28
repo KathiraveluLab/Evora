@@ -18,6 +18,9 @@ public class Node {
     private double cost = 10.0;     // Default unit cost
     private double latency = 5.0;  // Default processing latency (ms)
     private double throughput = 100.0; // Default throughput (Mbps)
+    
+    // Link latencies to neighbors (ms)
+    private java.util.Map<String, Double> neighborLatencies = new java.util.HashMap<>();
 
     public Node(String id, String[] links, String[] services) {
         this.id = id;
@@ -66,4 +69,12 @@ public class Node {
 
     public double getThroughput() { return throughput; }
     public void setThroughput(double throughput) { this.throughput = throughput; }
+
+    public java.util.Map<String, Double> getNeighborLatencies() { return neighborLatencies; }
+    public void addNeighborLatency(String neighborId, double latency) {
+        this.neighborLatencies.put(neighborId, latency);
+    }
+    public double getLatencyTo(String neighborId) {
+        return neighborLatencies.getOrDefault(neighborId, 10.0); // Default link delay 10ms
+    }
 }
