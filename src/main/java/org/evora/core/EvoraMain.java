@@ -61,6 +61,10 @@ public class EvoraMain {
             UserPolicy latencyPolicy = new UserPolicy(1.0, 10.0, 1.0);
             PlacementSolution sol2 = orchestrator.solveGreedy(nsc, latencyPolicy);
             System.out.println("Latency-Optimized Solution: " + sol2);
+
+            // Test Dynamic Flow Actuation
+            DynamicActuator actuator = new DynamicActuator();
+            actuator.actuate(sol2);
             
         } catch (Exception e) {
             System.err.println("Error initializing Évora Ecosystem: " + e.getMessage());
