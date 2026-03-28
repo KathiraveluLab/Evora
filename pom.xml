@@ -13,23 +13,39 @@
         <maven.compiler.target>9</maven.compiler.target>
     </properties>
 
-<dependencies>
-    <dependency>
-        <groupId>log4j</groupId>
-        <artifactId>log4j</artifactId>
-        <version>1.2.17</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.activemq</groupId>
-        <artifactId>activemq-all</artifactId>
-        <version>5.15.2</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.qpid</groupId>
-        <artifactId>qpid-amqp-1-0-client-jms</artifactId>
-        <version>0.18</version>
-    </dependency>
+    <repositories>
+        <repository>
+            <id>opendaylight-release</id>
+            <name>opendaylight-release</name>
+            <url>https://nexus.opendaylight.org/content/repositories/opendaylight.release/</url>
+        </repository>
+        <repository>
+            <id>opendaylight-snapshot</id>
+            <name>opendaylight-snapshot</name>
+            <url>https://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/</url>
+        </repository>
+    </repositories>
 
-
-</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.opendaylight.messaging4transport</groupId>
+            <artifactId>messaging4transport-impl</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>5.15.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.qpid</groupId>
+            <artifactId>qpid-amqp-1-0-client-jms</artifactId>
+            <version>0.18</version>
+        </dependency>
+    </dependencies>
 </project>
