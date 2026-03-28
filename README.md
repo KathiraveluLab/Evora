@@ -36,7 +36,7 @@ chmod +x install_m4t.sh
 - `src/main/java/org/evora/registry`: Service Registry implementation.
 - `pom.xml`: Configured with ODL repositories and `messaging4transport-impl` dependency.
 
-# Citing Évora
+## Citing Évora
 
 If you use Évora in your research, please cite the below paper:
 
