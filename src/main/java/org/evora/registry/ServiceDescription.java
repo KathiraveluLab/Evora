@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Model for a service description in the Mayan registry.
+ * Model for a service description in the Évora registry.
  * Supports simple services and composite service compositions.
  */
 public class ServiceDescription {

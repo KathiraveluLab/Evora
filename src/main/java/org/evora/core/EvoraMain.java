@@ -35,6 +35,22 @@ public class EvoraMain {
 
     public static void main(String[] args) {
         populateNscMap();
+        System.out.println("Évora Research Framework Initialized.");
+        
+        try {
+            // Load Service Registry configuration
+            org.evora.registry.ServiceRegistry.getInstance().loadConfig("src/main/resources/services.conf");
+            
+            // Test Compatibility Layer: Chain Axis2 service with a CXF service
+            CompatibilityLayer.chainServices(
+                "dupl_instance_count", "axis2", 
+                "dupl_instance_count", "cxf", 
+                Map.of("sample", "data")
+            );
+            
+        } catch (Exception e) {
+            System.err.println("Error initializing Évora Ecosystem: " + e.getMessage());
+        }
     }
 
 

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The Mayan Service Registry.
+ * The Évora Service Registry.
  * Manages service descriptions and endpoints for heterogeneous building blocks.
  */
 public class ServiceRegistry {
