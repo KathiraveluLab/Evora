@@ -33,19 +33,19 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.36</version>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-all</artifactId>
-            <version>5.15.2</version>
+            <artifactId>activemq-client</artifactId>
+            <version>5.18.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.qpid</groupId>
-            <artifactId>qpid-amqp-1-0-client-jms</artifactId>
-            <version>0.18</version>
+            <artifactId>qpid-jms-client</artifactId>
+            <version>1.10.0</version>
         </dependency>
     </dependencies>
 </project>
