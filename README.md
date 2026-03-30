@@ -55,6 +55,8 @@ sudo mn --custom evora_topology.py --topo evora --controller remote,ip=<odl_ip>
 
 ## Citing Évora
 
-If you use Évora in your research, please cite the below paper:
+If you use Évora in your research, please cite the following papers:
 
 * Kathiravelu, P., Van Roy, P. and Veiga, L., 2018. **Composing network service chains at the edge: A Resilient and adaptive software‐defined approach.** Transactions on Emerging Telecommunications Technologies, 29(11), p.e3489.
+
+* Kathiravelu, P., Grbac, T.G. and Veiga, L., 2016, June. **Building blocks of Mayan: Componentizing the escience workflows through software-defined service composition.** In 2016 IEEE International Conference on Web Services (ICWS) (pp. 372-379). IEEE.
