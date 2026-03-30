@@ -2,6 +2,25 @@
 
 Évora is a research framework for service composition and orchestration in SDN-enabled environments.
 
+## Docker Environment
+
+For research reproducibility, Évora provides a Dockerized environment for its core dependencies (ActiveMQ, Axis2, CXF).
+
+### Automated Startup
+```bash
+chmod +x run-evora.sh
+./run-evora.sh
+```
+
+### Manual Orchestration
+```bash
+docker-compose up -d
+```
+The services will be available at:
+- **ActiveMQ (AMQP)**: `localhost:61616`
+- **Axis2 (Legacy)**: `localhost:8080`
+- **CXF (Modern)**: `localhost:8081`
+
 ## Messaging4Transport Integration
 
 The framework is configured to use the [Messaging4Transport](https://github.com/KathiraveluLab/messaging4transport) middleware for robust MD-SAL to AMQP bindings.

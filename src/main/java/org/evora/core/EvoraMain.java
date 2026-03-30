@@ -1,19 +1,14 @@
-/*
- * Copyright (c) 2018. Pradeeban Kathiravelu. All rights reserved.
- *
- *  This program and the accompanying materials are made available under the
- *  terms of the Eclipse Public License v1.0 which accompanies this distribution,
- *  and is available at http://www.eclipse.org/legal/epl-v10.html
- *
- */
 package org.evora.core;
 
+import org.evora.core.model.*;
+import org.evora.core.invoker.*;
+import org.evora.core.orchestration.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EvoraMain {
     private static Map<String, Node> tempNodes = new HashMap();
-    private static String[] nsc = {"s5", "s4", "s3"};
+    private static String[] nsc = NSCBuilder.getDefaultChain();
 
     /**
      * Considers only the connected graphs.

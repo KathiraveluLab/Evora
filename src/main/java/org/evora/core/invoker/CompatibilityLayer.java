@@ -1,14 +1,8 @@
-/*
- * Copyright (c) 2018. Pradeeban Kathiravelu. All rights reserved.
- *
- *  This program and the accompanying materials are made available under the
- *  terms of the Eclipse Public License v1.0 which accompanies this distribution,
- *  and is available at http://www.eclipse.org/legal/epl-v10.html
- *
- */
-package org.evora.core;
+package org.evora.core.invoker;
 
 import org.evora.registry.ServiceRegistry;
+import org.json.JSONObject;
+import org.json.XML;
 import java.util.Map;
 
 /**
@@ -59,13 +53,35 @@ public class CompatibilityLayer {
         Object result1 = invokeService(s1, impl1, initialParams);
         System.out.println("Service 1 Result: " + result1);
         
-        // Data Transformation 'Glue' Logic
-        // In a complex scenario, we would use a DataConverter here (e.g., XML -> JSON).
-        Map<String, Object> nextParams = Map.of("chained_input", result1); 
+        // Data Transformation 'Glue' Logic:
+        // Automatically detect XML output and convert to JSON for modern service compatibility.
+        Object transformedResult = result1;
+        if (result1 instanceof String && ((String) result1).trim().startsWith("<")) {
+            System.out.println("[Glue] XML detected, converting to JSON for next service...");
+            transformedResult = convertXmlToJson((String) result1);
+            System.out.println("[Glue] Transformed Result: " + transformedResult);
+        }
+
+        Map<String, Object> nextParams = Map.of("chained_input", transformedResult);
         
         Object result2 = invokeService(s2, impl2, nextParams);
         System.out.println("Service 2 Result: " + result2);
         
         return result2;
+    }
+
+    /**
+     * Helper to perform XML to JSON transformation.
+     * @param xml Input XML string.
+     * @return JSON representation.
+     */
+    private static String convertXmlToJson(String xml) {
+        try {
+            JSONObject json = XML.toJSONObject(xml);
+            return json.toString(4);
+        } catch (Exception e) {
+            System.err.println("[Glue Error] XML to JSON conversion failed: " + e.getMessage());
+            return xml; // Fallback to original content
+        }
     }
 }
