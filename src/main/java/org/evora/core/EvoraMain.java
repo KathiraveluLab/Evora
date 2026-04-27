@@ -37,12 +37,30 @@ public class EvoraMain {
     }
 
     public static void main(String[] args) {
-        populateNscMap();
         System.out.println("Évora Research Framework Initialized.");
         
         try {
             // Load Service Registry configuration
             org.evora.registry.ServiceRegistry.getInstance().loadConfig("src/main/resources/services.conf");
+
+            Map<String, Node> topology;
+            String[] activeChain;
+            UserPolicy activePolicy;
+
+            String inputPath = "src/main/resources/input.json";
+            if (new java.io.File(inputPath).exists()) {
+                System.out.println("--- Loading Custom Inputs from " + inputPath + " ---");
+                org.evora.core.util.JsonInputLoader.SimulationInput input = org.evora.core.util.JsonInputLoader.load(inputPath);
+                topology = input.topology;
+                activeChain = input.serviceChain;
+                activePolicy = input.policy;
+            } else {
+                System.out.println("--- Using Internal Default Topology ---");
+                populateNscMap();
+                topology = tempNodes;
+                activeChain = nsc;
+                activePolicy = new UserPolicy(1.0, 10.0, 1.0); // Default latency-optimized
+            }
             
             // Test Compatibility Layer: Chain Axis2 service with a CXF service
             CompatibilityLayer.chainServices(
@@ -52,38 +70,28 @@ public class EvoraMain {
             );
 
             // Test Dynamic Placement Orchestrator
-            Orchestrator orchestrator = new Orchestrator(tempNodes);
+            Orchestrator orchestrator = new Orchestrator(topology);
             
-            // Policy 1: Cost Optimized (alpha=10.0, others=1.0)
-            UserPolicy costPolicy = new UserPolicy(10.0, 1.0, 1.0);
-            PlacementSolution sol1 = orchestrator.solveGreedy(nsc, costPolicy);
-            System.out.println("Cost-Optimized Solution: " + sol1);
-
-            // Policy 2: Latency Optimized (beta=10.0, others=1.0)
-            UserPolicy latencyPolicy = new UserPolicy(1.0, 10.0, 1.0);
-            PlacementSolution sol2 = orchestrator.solveGreedy(nsc, latencyPolicy);
-            System.out.println("Greedy Latency-Optimized Solution: " + sol2);
-
-            // Test solveHeuristic (Global Optimum)
-            PlacementSolution solHeuristic = orchestrator.solveHeuristic(nsc, latencyPolicy);
-            System.out.println("Heuristic Latency-Optimized Solution: " + solHeuristic);
+            // 1. Solve using the loaded policy/chain
+            System.out.println("\n--- Orchestrating Loaded Service Chain ---");
+            PlacementSolution sol = orchestrator.solveGreedy(activeChain, activePolicy);
+            System.out.println("Heuristic Solution: " + sol);
 
             // Test Dynamic Flow Actuation
             DynamicActuator actuator = new DynamicActuator();
-            actuator.actuate(solHeuristic);
+            actuator.actuate(sol);
 
-            // Test SLM: VNF Migration Scenario (Section V.C)
+            // Test SLM: VNF Migration Scenario
             System.out.println("\n--- Initiating Dynamic Migration Test (SLM) ---");
             ServiceLifecycleManager slm = new ServiceLifecycleManager(orchestrator, actuator);
             
-            // Simulate congestion on the current optimal node for 's5'
-            String s5NodeId = solHeuristic.getMappings().get("s5");
-            Node s5Node = tempNodes.get(s5NodeId);
-            System.out.println("Simulating congestion on node " + s5NodeId + " (Latency 2ms -> 50ms)");
-            s5Node.setLatency(50.0); 
+            // Trigger SLM re-evaluation on the first node of the chain
+            String targetService = activeChain[0];
+            String targetNodeId = sol.getMappings().get(targetService);
+            System.out.println("Simulating congestion on node " + targetNodeId + " for service " + targetService);
+            topology.get(targetNodeId).setLatency(100.0); 
 
-            // Trigger SLM re-evaluation
-            slm.onResourceChange("s5", s5NodeId, nsc, latencyPolicy);
+            slm.onResourceChange(targetService, targetNodeId, activeChain, activePolicy);
             
             System.out.println("\n--- Évora Simulation Complete ---");
             System.exit(0);

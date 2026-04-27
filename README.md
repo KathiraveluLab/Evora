@@ -65,6 +65,23 @@ To spin up the 12-node edge topology in Mininet and connect it to the containeri
 sudo mn --custom evora_topology.py --topo evora --controller remote,ip=127.0.0.1,port=6633
 ```
 
+## Custom Simulation Inputs
+
+To use your own topology and service chains, edit the configuration file:
+- `src/main/resources/input.json`
+
+The framework will automatically detect this file and load your custom nodes, link latencies, VNF placements, and orchestration policies.
+
+**Example `input.json` Schema:**
+```json
+{
+  "topology": [{"id": "node1", "neighbors": ["node2"], "services": ["s1"], "cost": 10.0, "latency": 2.0, "throughput": 100.0}],
+  "links": [{"from": "node1", "to": "node2", "latency": 5.0}],
+  "serviceChain": ["s1", "s2"],
+  "policy": {"costWeight": 1.0, "latencyWeight": 10.0, "throughputWeight": 1.0}
+}
+```
+
 ## Citing Évora
 
 If you use Évora in your research, please cite the following papers:
