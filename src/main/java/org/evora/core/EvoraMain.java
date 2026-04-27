@@ -85,8 +85,12 @@ public class EvoraMain {
             // Trigger SLM re-evaluation
             slm.onResourceChange("s5", s5NodeId, nsc, latencyPolicy);
             
+            System.out.println("\n--- Évora Simulation Complete ---");
+            System.exit(0);
+            
         } catch (Exception e) {
             System.err.println("Error initializing Évora Ecosystem: " + e.getMessage());
+            System.exit(1);
         }
     }
 

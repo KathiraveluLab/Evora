@@ -8,47 +8,38 @@ For research reproducibility, Évora provides a Dockerized environment for its c
 
 ### Automated Startup
 ```bash
-chmod +x run-evora.sh
-./run-evora.sh
+chmod +x evora.sh
+./evora.sh
 ```
 
-### Manual Orchestration
-```bash
-docker-compose up -d
-```
+> [!TIP]
+> If you encounter Docker errors like `KeyError: 'ContainerConfig'`, run the script with the clean flag:
+> `./evora.sh --clean`
+
 The services will be available at:
-- **ActiveMQ (AMQP)**: `localhost:61616`
-- **Axis2 (Legacy)**: `localhost:8080`
-- **CXF (Modern)**: `localhost:8081`
-
-## Messaging4Transport Integration
-
-The framework is configured to use the [Messaging4Transport](https://github.com/KathiraveluLab/messaging4transport) middleware for robust MD-SAL to AMQP bindings.
-
-### Local Installation of Messaging4Transport
-
-Since Messaging4Transport is a separate project, you must install it to your local Maven repository (`~/.m2/repository`) before building Évora.
-
-#### Automated Installation
-```bash
-chmod +x install_m4t.sh
-./install_m4t.sh
-```
-
-#### Manual Installation
-1.  **Clone the repository**:
-    ```bash
-    git clone https://github.com/KathiraveluLab/messaging4transport.git
-    ```
-2.  **Install to local Maven repository**:
-    ```bash
-    cd messaging4transport
-    mvn clean install -DskipTests
-    ```
+- **ActiveMQ (AMQP)**: `localhost:61616` (or next free port)
+- **Axis2 (Legacy)**: `localhost:8080` (or next free port)
+- **CXF (Modern)**: `localhost:8081` (or next free port)
 
 > [!NOTE]
-> If you do not have Maven installed, you can install it on Ubuntu/Linux using:
-> `sudo apt install maven`
+> **Dynamic Port Resolution**: The `evora.sh` script automatically detects port conflicts.
+> 1. If the required port is occupied by the *same* service (e.g., from another project), it will reuse it.
+> 2. If occupied by a *different* service, it assigns the next available port and automatically patches the Java source code and configuration files before building.
+
+## Framework Setup
+
+Évora requires the [Messaging4Transport](https://github.com/KathiraveluLab/messaging4transport) middleware to be installed in your local Maven repository.
+
+The `evora.sh` script handles everything automatically:
+1. Verifies/installs Maven.
+2. Auto-installs Messaging4Transport dependency if missing.
+3. Manages Docker dependencies with dynamic port resolution.
+4. Patches the framework and compiles the project.
+
+```bash
+chmod +x evora.sh
+./evora.sh
+```
 
 ## Project Structure
 - `src/main/java/org/evora/core`: Building block, composition, and Orchestration logic.
@@ -56,20 +47,22 @@ chmod +x install_m4t.sh
 - `evora_topology.py`: 12-node Mininet edge topology script.
 - `pom.xml`: Configured with ODL repositories and `messaging4transport-impl` dependency.
 
-## Empirical Evaluation
+**Run the Benchmarker** (after running `./evora.sh`):
+```bash
+mvn exec:java -Dexec.mainClass="org.evora.core.util.Benchmarker"
+```
 
-To reproduce the performance results (Speedup and Complexity) from the ETT 2018 paper:
-1.  **Build the project**: `mvn clean compile`
-2.  **Run the Benchmarker**:
-    ```bash
-    java -cp target/classes org.evora.core.Benchmarker
-    ```
+**Run Sample Orchestration**:
+```bash
+mvn exec:java -Dexec.mainClass="org.evora.core.EvoraMain"
+```
 
 ## SDN Deployment (Mininet)
 
-To spin up the 12-node edge topology in a Mininet environment managed by OpenDaylight:
+To spin up the 12-node edge topology in Mininet and connect it to the containerized OpenDaylight controller:
 ```bash
-sudo mn --custom evora_topology.py --topo evora --controller remote,ip=<odl_ip>
+# Connect Mininet to the Dockerized ODL (listening on host port 6633)
+sudo mn --custom evora_topology.py --topo evora --controller remote,ip=127.0.0.1,port=6633
 ```
 
 ## Citing Évora

@@ -6,8 +6,8 @@ services:
     image: apache/activemq-artemis:latest-alpine
     container_name: evora-activemq
     ports:
-      - "61616:61616"  # AMQP/JMS
-      - "8161:8161"    # Web Console (Admin:Admin)
+      - "${ACTIVEMQ_PORT:-61616}:61616"  # AMQP/JMS
+      - "${ACTIVEMQ_UI_PORT:-8161}:8161"    # Web Console (Admin:Admin)
     environment:
       - ARTEMIS_USER=admin
       - ARTEMIS_PASSWORD=admin
@@ -16,10 +16,10 @@ services:
 
   # Axis2 for SOAP 1.1/1.2 legacy services
   axis2:
-    image: isuru/axis2:latest
+    image: angig/axis2:latest
     container_name: evora-axis2
     ports:
-      - "8080:8080"
+      - "${AXIS2_PORT:-8080}:8080"
     networks:
       - evora-net
 
@@ -28,7 +28,16 @@ services:
     image: tomcat:9-jdk11-openjdk-slim
     container_name: evora-cxf
     ports:
-      - "8081:8080"
+      - "${CXF_PORT:-8081}:8080"
+    networks:
+      - evora-net
+  # OpenDaylight Controller (Community Beryllium/Lithium)
+  opendaylight:
+    image: glefevre/opendaylight:latest
+    container_name: evora-odl
+    ports:
+      - "${ODL_OF_PORT:-6633}:6633"   # OpenFlow
+      - "${ODL_REST_PORT:-8181}:8181" # RESTCONF
     networks:
       - evora-net
 

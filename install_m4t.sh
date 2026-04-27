@@ -25,7 +25,8 @@ fi
 cd $TEMP_DIR
 
 echo "Installing to local Maven repository..."
-mvn clean install -DskipTests
+export MAVEN_OPTS="--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/java.text=ALL-UNNAMED --add-opens java.desktop/java.awt.font=ALL-UNNAMED"
+mvn clean install -DskipTests -Dmaven.javadoc.skip=true -pl api,impl -am
 
 if [ $? -eq 0 ]; then
     echo "SUCCESS: Messaging4Transport installed successfully."

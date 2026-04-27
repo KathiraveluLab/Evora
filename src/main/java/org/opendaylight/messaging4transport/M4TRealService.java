@@ -13,7 +13,7 @@ public class M4TRealService implements Messaging4TransportService {
     public M4TRealService() {
         try {
             // Real ActiveMQ Connection for AMQP/M4T bridging
-            ConnectionFactory factory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+            ConnectionFactory factory = new ActiveMQConnectionFactory("admin", "admin", "tcp://localhost:61616");
             connection = factory.createConnection();
             connection.start();
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
