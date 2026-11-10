@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-client</artifactId>
-            <version>6.2.5</version>
+            <version>6.2.7</version>
         </dependency>
         <dependency>
             <groupId>org.apache.qpid</groupId>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
-            <version>20260522</version>
+            <version>20260719</version>
         </dependency>
     </dependencies>
 </project>
